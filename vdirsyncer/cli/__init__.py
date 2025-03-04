@@ -147,7 +147,10 @@ def sync(ctx, collections, force_delete):
                         )
                     )
 
-            await asyncio.gather(*tasks)
+            results = await asyncio.gather(*tasks, return_exceptions=True)
+            for result in results:
+                if isinstance(result, Exception):
+                    raise result
 
     asyncio.run(main(collections))
 
